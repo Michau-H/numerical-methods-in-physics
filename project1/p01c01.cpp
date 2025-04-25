@@ -57,7 +57,7 @@ int main() {
             std::string path = folder + n; 
             std::ofstream outW(path);
             
-            Stan niestan = {dt,dt,dt,dt};
+            Stan niestan = {dt,0,0,0};
             zapisz(niestan, &outW);
             int rozm = int(100./dt)+1;
             Stan * test = new Stan[rozm];
@@ -93,6 +93,7 @@ int main() {
 
     ////////////////////////////////////////////////////////////////////////////////////////
     // do badania zbierzności
+    
     long double DeltaTE[7] = {0.0005,0.00025,0.0002,0.0001,0.00005,0.00002,0.00001};
     long double DeltaTV[7] = {0.02,0.016,0.0125,0.01,0.005,0.002,0.001};
     long double DeltaTR[7] = {0.02,0.016,0.0125,0.01,0.005,0.002,0.001};
@@ -148,7 +149,7 @@ int main() {
             std::cout << "zapisane " << n << std::endl;
         }
     }
-
+    
 
     return 0;
 }
