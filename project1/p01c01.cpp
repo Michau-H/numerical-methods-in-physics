@@ -93,9 +93,9 @@ int main() {
 
     ////////////////////////////////////////////////////////////////////////////////////////
     // do badania zbierzności
-    long double DeltaTE[7] = {0.001,0.0005,0.0002,0.0001,0.00005,0.00002,0.00001};
-    long double DeltaTV[7] = {0.1,0.05,0.02,0.01,0.005,0.002,0.001};
-    long double DeltaTR[7] = {0.1,0.05,0.02,0.01,0.005,0.002,0.001};
+    long double DeltaTE[7] = {0.0005,0.00025,0.0002,0.0001,0.00005,0.00002,0.00001};
+    long double DeltaTV[7] = {0.02,0.016,0.0125,0.01,0.005,0.002,0.001};
+    long double DeltaTR[7] = {0.02,0.016,0.0125,0.01,0.005,0.002,0.001};
     std::string name[3] = {"Euler", "Verlet", "RK4"};
     for(int k=0; k<3; k++){
         for(int j=0; j<7; j++){
@@ -117,7 +117,7 @@ int main() {
             std::string path = folder + n; 
             std::ofstream outW(path);
             
-            Stan niestan = {dt,dt,dt,dt};
+            Stan niestan = {dt,0,0,0};
             zapisz(niestan, &outW);
             int rozm = int(10./dt)+1;
             Stan * test = new Stan[rozm];
