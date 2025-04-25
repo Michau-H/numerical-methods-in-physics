@@ -53,7 +53,7 @@ int main() {
 
             std::string n = name[k];
             n += ("_" + std::to_string(j) + ".txt");
-            std::string folder = "/Users/michau/Documents/MOFIT1/results_1a/";
+            std::string folder = "/Users/michau/Documents/MOFIT1/results_p01/results_1a/";
             std::string path = folder + n; 
             std::ofstream outW(path);
             
@@ -113,7 +113,7 @@ int main() {
 
             std::string n = name[k];
             n += ("_" + std::to_string(j) + ".txt");
-            std::string folder = "/Users/michau/Documents/MOFIT1/results_1b/";
+            std::string folder = "/Users/michau/Documents/MOFIT1/results_p01/results_1b/";
             std::string path = folder + n; 
             std::ofstream outW(path);
             

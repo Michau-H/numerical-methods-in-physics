@@ -40,7 +40,7 @@ int main() {
     for(int k=0; k<3; k++){
         std::string n = name[k];
         n += ("_" + std::to_string(0) + ".txt");
-        std::string folder = "/Users/michau/Documents/MOFIT1/results_2/";
+        std::string folder = "/Users/michau/Documents/MOFIT1/results_p01/results_2/";
         std::string path = folder + n; 
         std::ofstream outW(path);
         double dt = 0.001;
