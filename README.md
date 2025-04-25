@@ -1,4 +1,4 @@
-# Numerical Methods Simulations
+# Numerical Methods
 
 Source code for simulations for the subject *"Numerical Methods in Physics and Technics"*.
 
