@@ -13,7 +13,6 @@ struct Stan {
 };
 
 
-// funkcje
 double phi(double);
 
 double a(double);
@@ -29,9 +28,14 @@ Stan RK4(Stan, double);
 void zapisz(Stan, std::ofstream *);
 
 
-// main
 int main() {
     
+
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // do symualcji ( ponizej kod do badania zbierzności )
+
+
+
     /*
     long double DeltaTE[5] = {0.001,0.0005,0.0001,0.00005,0.00001};
     long double DeltaTV[5] = {0.1,0.05,0.01,0.005,0.001};
@@ -53,6 +57,7 @@ int main() {
 
             std::string n = name[k];
             n += ("_" + std::to_string(j) + ".txt");
+            // sciezka folderu do zapisania
             std::string folder = "/Users/michau/Documents/MOFIT1/results_p01/results_1a/";
             std::string path = folder + n; 
             std::ofstream outW(path);
@@ -93,13 +98,13 @@ int main() {
 
     ////////////////////////////////////////////////////////////////////////////////////////
     // do badania zbierzności
-    
+    int limit[3] = {7,7,8};
     long double DeltaTE[7] = {0.0005,0.00025,0.0002,0.0001,0.00005,0.00002,0.00001};
     long double DeltaTV[7] = {0.02,0.016,0.0125,0.01,0.005,0.002,0.001};
-    long double DeltaTR[7] = {0.02,0.016,0.0125,0.01,0.005,0.002,0.001};
+    long double DeltaTR[8] = {0.02,0.016,0.0125,0.01,0.005,0.002,0.001, 0.00001};
     std::string name[3] = {"Euler", "Verlet", "RK4"};
     for(int k=0; k<3; k++){
-        for(int j=0; j<7; j++){
+        for(int j=0; j<limit[k]; j++){
 
             long double dt;
             if(k==0){
@@ -114,6 +119,7 @@ int main() {
 
             std::string n = name[k];
             n += ("_" + std::to_string(j) + ".txt");
+            // sciezka folderu do zapisania
             std::string folder = "/Users/michau/Documents/MOFIT1/results_p01/results_1b/";
             std::string path = folder + n; 
             std::ofstream outW(path);
@@ -154,7 +160,6 @@ int main() {
     return 0;
 }
 
-// definicje
 double phi(double x){
     return -pow(M_E,(-x*x/l1*l1))-8*pow(M_E,(-pow((x-2),2)/(l2*l2)));
 }

@@ -8,13 +8,13 @@
 const double l1=1, l2=1/sqrt(8);
 const double m0 = 1.;
 
+
 struct Stan {
     long double t;
     double x,v,e;
 };
 
 
-// funkcje
 double phi(double);
 
 double a(double, double, double);
@@ -33,15 +33,15 @@ Stan Euler(Stan, double, double);
 
 Stan RK4(Stan, double, double);
 
-Stan Trapezy(Stan, double, double);
+Stan Trapezy(Stan, double, double, double);
 
 void zapisz(Stan, std::ofstream *);
 
 
-// main
 int main() {
     
     double tol = 1e-7;
+    double tol2 = tol;
     std::string name = {"Trapezy"};
     int d={2};
 
@@ -51,6 +51,7 @@ int main() {
         double alpha = alpha_tab[i];
         std::string n = name;
         n += ("_" + std::to_string(i) + ".txt");
+        // sciezka folderu do zapisania
         std::string folder = "/Users/michau/Documents/MOFIT1/results_p01/results_4/";
         std::string path = folder + n; 
         std::ofstream outW(path);
@@ -64,8 +65,8 @@ int main() {
           
         while(test.back().t <100){
             Stan u2, u12;
-            u2 = Trapezy(test.back(), 2*dt, alpha);
-            u12 = Trapezy(Trapezy(test.back(), dt, alpha), dt, alpha);
+            u2 = Trapezy(test.back(), 2*dt, alpha, tol2);
+            u12 = Trapezy(Trapezy(test.back(), dt, alpha, tol2), dt, alpha, tol2);
             double eps_x = abs((u2.x-u12.x)/(pow(2,d)-1));
             double eps_v = abs((u2.v-u12.v)/(pow(2,d)-1));
             double eps = (eps_x>eps_v ? eps_x : eps_v);
@@ -92,7 +93,7 @@ int main() {
     return 0;
 }
 
-// definicje
+
 double phi(double x){
     return -pow(M_E,(-x*x/l1*l1))-8*pow(M_E,(-pow((x-2),2)/(l2*l2)));
 }
@@ -102,7 +103,7 @@ double a(double x, double v, double alpha){
 }
 
 double ddPhi(double x, double alpha){
-    return (phi(x + 0.001) - 2*phi(x) + phi(x - 0.001))/(0.001*0.001);
+    return (phi(x + 0.01) - 2*phi(x) + phi(x - 0.01))/(0.01*0.01);
 }
 
 double F1(Stan s0, Stan s1, double dt){
@@ -125,18 +126,27 @@ Stan Euler(Stan s1, double dt, double alpha){
     return s2;
 }
 
-Stan Trapezy(Stan s1, double dt, double alpha){
+Stan Trapezy(Stan s1, double dt, double alpha, double tol){
     Stan s2 = s1;
     s2.t = (s1.t/dt+1)*dt;
-    for(int i=0; i<5; i++){
+    double err=1;
+    int i=0;
+    while(err>tol){
         double f1 = F1(s1, s2, dt);
         double f2 = F2(s1, s2, dt, alpha);
         double ww = 1 + dt/2*(alpha + dt/(2*m0)*ddPhi(s2.x, alpha));
         double wx = -f1*(1+dt/2*alpha) - f2*dt/2*alpha;
         double wv = dt/(2*m0)*ddPhi(s2.x, alpha)*f1 - f2;
+        double dx = wx/ww;
+        double dv = wv/ww;
+        s2.x += dx;
+        s2.v += dv;
 
-        s2.x += wx/ww;
-        s2.v += wv/ww;
+        double eps_x = abs(dx);
+        double eps_v = abs(dv);
+        err = (eps_x > eps_v ? eps_x : eps_v);
+
+        i++;
     }
     s2.e = m0*(phi(s2.x)+0.5*pow(s2.v,2));
     return s2;

@@ -14,7 +14,6 @@ struct Stan {
 };
 
 
-// funkcje
 double phi(double);
 
 double a(double, double, double);
@@ -30,7 +29,6 @@ Stan RK4(Stan, double, double);
 void zapisz(Stan, std::ofstream *);
 
 
-// main
 int main() {
     
     double tol = 1e-7;
@@ -45,6 +43,7 @@ int main() {
         for(int k=0; k<3; k++){
             std::string n = name[k];
             n += ("_" + std::to_string(i) + ".txt");
+            // sciezka folderu do zapisania
             std::string folder = "/Users/michau/Documents/MOFIT1/results_p01/results_3/";
             std::string path = folder + n; 
             std::ofstream outW(path);
@@ -115,7 +114,7 @@ int main() {
     return 0;
 }
 
-// definicje
+
 double phi(double x){
     return -pow(M_E,(-x*x/l1*l1))-8*pow(M_E,(-pow((x-2),2)/(l2*l2)));
 }
