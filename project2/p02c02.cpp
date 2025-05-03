@@ -4,7 +4,7 @@
 #include <string>
 #include <iomanip>
 
-const double d=4, x0=4, dx=1;
+const double d=4, x0=4, dx=1, w=1.9;
 const int N=31;
 
 
@@ -12,7 +12,7 @@ double ro(int, int);
 
 double roP(int, int, double**);
 
-double relaksacja(int, int, double**);
+double nad_relaksacja(int, int, double**);
 
 double S(double**);
 
@@ -44,7 +44,7 @@ int main(){
     }
 
     // sciezka folderu do zapisania
-    std::string folder = "/Users/michau/Documents/MOFIT1/results_p02/results_1/";
+    std::string folder = "/Users/michau/Documents/MOFIT1/results_p02/results_2/";
 
     std::string path100 = folder + "u_at_100.txt"; 
     std::ofstream outW100(path100);
@@ -71,7 +71,7 @@ int main(){
     for(int iter=0; iter<500; iter++){
         for(int i=1; i<2*N; i++){
             for(int j=1; j<2*N; j++){
-                v[i][j] = relaksacja(i,j,u);
+                v[i][j] = nad_relaksacja(i,j,u);
                 ro_m[i][j] = roP(i,j,v);
                 d_m[i][j] = roP(i,j,v) - ro(i,j);
             } 
@@ -129,8 +129,8 @@ double roP(int i, int j, double** u){
     return -(u[i+1][j] + u[i-1][j] + u[i][j+1] + u[i][j-1] -4*u[i][j])/pow(dx,2);
 }
 
-double relaksacja(int i, int j, double** u){
-    return (u[i+1][j] + u[i-1][j] + u[i][j+1] + u[i][j-1] + ro(i,j)*pow(dx,2))/4;
+double nad_relaksacja(int i, int j, double** u){
+    return (1-w)*u[i][j] + w*((u[i+1][j] + u[i-1][j] + u[i][j+1] + u[i][j-1] + ro(i,j)*pow(dx,2))/4);
 }
 
 double S(double ** u){
