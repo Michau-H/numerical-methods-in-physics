@@ -18,9 +18,17 @@ Source code for simulations for the subject *"Numerical Methods in Physics and T
 
 ## ⚡ Project 2 – Poisson's Equation
 
-**Topic:** Relaxation and Over-Relaxation methods
+**Implemented numerical methods:**
+- Relaxation method  
+- Over-Relaxation (OR)  
+- Minimization of S-functional  
+- Monte Carlo minimization of S-functional  
 
-🛠️ *Work in progress...*
+**Features:**
+- Fixed grid-based simulation  
+- Energy functional tracking  
+- Comparison of methods
+
 
 
 ## 🌊 Project 3 – Flow of Viscous Liquid
