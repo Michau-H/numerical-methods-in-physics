@@ -4,16 +4,19 @@
 #include <string>
 #include <iomanip>
 
-const double d=4, x0=4, dx=1;
-const int N=31;
+const double Q=-1., mu=1, ro=1, dz=0.01;
+const int i1=-100, i2=150, j1=-40, j2=40;
+const double X1=i1*dz, X2=i2*dz, Y1=-j1*dz, Y2=j2*dz;
 
 void kopiuj(double**, double**, int);
 
-double ro(int, int);
+double phi0(int, int);
 
-double roP(int, int, double**);
+double ksi0(int, int);
 
-double relaksacja(int, int, double**);
+double relaksacjaPhi(int, int, double**, double);
+
+double relaksacjaKsi(int, int, double**, double**);
 
 double S(double**);
 
@@ -24,20 +27,25 @@ void zapiszU(double**, std::ofstream *);
 int main(){
 
 
-    double** u = new double*[2*N+1];
-    for (int i = 0; i < 2*N+1; i++) {
-        u[i] = new double[2*N+1]();
-    }
-    
-    double** ro_m = new double*[2*N+1];
-    for (int i = 0; i < 2*N+1; i++) {
-        ro_m[i] = new double[2*N+1]();
+    double** ksi = new double*[i2-i1+1];
+    for (int i = 0; i < i2-i1+1; i++) {
+        ksi[i] = new double[j2-j1+1]();
     }
 
-    double** d_m = new double*[2*N+1];
-    for (int i = 0; i < 2*N+1; i++) {
-        d_m[i] = new double[2*N+1]();
+    double** phi = new double*[i2-i1+1];
+    for (int i = 0; i < i2-i1+1; i++) {
+        phi[i] = new double[j2-j1+1]();
     }
+
+    // double** ro_m = new double*[2*N+1];
+    // for (int i = 0; i < 2*N+1; i++) {
+    //     ro_m[i] = new double[2*N+1]();
+    // }
+
+    // double** d_m = new double*[2*N+1];
+    // for (int i = 0; i < 2*N+1; i++) {
+    //     d_m[i] = new double[2*N+1]();
+    // }
 
     // sciezka folderu do zapisania
     std::string folder = "/Users/michau/Documents/MOFIT1/results_p02/results_1/";
@@ -76,6 +84,7 @@ int main(){
                 d_m[i][j] = roP(i,j,u) - ro(i,j);
             } 
         }
+        // kopiuj(u, v, 2*N+1);
 
         if(iter==99){
             zapiszU(u, &outW100);
@@ -107,14 +116,14 @@ int main(){
     outWS.close();
 
 
-    for (int i = 0; i < 2*N+1; i++) {
-        delete[] u[i];
-        delete[] ro_m[i];
-        delete[] d_m[i];
+    for (int i = 0; i < j2-j1+1; i++) {
+        delete[] phi[i];
+        delete[] ksi[i];
+        // delete[] d_m[i];
     }
-    delete[] u;
-    delete[] ro_m;
-    delete[] d_m;
+    delete[] phi;
+    delete[] ksi;
+    // delete[] d_m;
     
 
     return 0;
@@ -128,16 +137,34 @@ void kopiuj(double** dest, double** src, int rozmiar) {
     }
 }
 
-double ro(int x, int y){
-    return exp(-(pow((x-x0-N),2)+pow(y-N, 2))/(d*d)) - exp(-(pow((x+x0-N),2)+pow(y-N, 2))/(d*d));
+double phi0(int i, int j){
+    if(i!=0 && i!=i1-i2 && j!=0 && j!=j1-j2)
+        return 0;
+    else{
+        double x = i*dz;
+        double y = j*dz;
+        return 0.5*Q/mu*(pow(y,3)/3-pow(y,2)/2*(Y1+Y2)+Y1*Y2*y);
+    }
 }
 
-double roP(int i, int j, double** u){
-    return -(u[i+1][j] + u[i-1][j] + u[i][j+1] + u[i][j-1] -4*u[i][j])/pow(dx,2);
+double ksi0(int i, int j){
+    if(i!=0 && i!=i1-i2 && j!=0 && j!=j1-j2)
+        return 0;
+    else{
+        double x = i*dz;
+        double y = j*dz;
+        return 0.5*Q/mu*(2*y-Y1-Y2);
+    }
 }
 
-double relaksacja(int i, int j, double** u){
-    return (u[i+1][j] + u[i-1][j] + u[i][j+1] + u[i][j-1] + ro(i,j)*pow(dx,2))/4;
+double relaksacjaPhi(int i, int j, double** phi, double ksi){
+    return (phi[i+1][j] + phi[i-1][j] + phi[i][j+1] + phi[i][j-1] - ksi*pow(dz,2))/4;
+}
+
+double relaksacjaKsi(int i, int j, double** phi, double** ksi){
+    return (ksi[i+1][j] + ksi[i-1][j] + ksi[i][j+1] + ksi[i][j-1])/4
+            -((phi[i][j+1]-phi[i][j-1])*(ksi[i+1][j]-ksi[i-1][j])
+            -(phi[i+1][j]-phi[i-1][j])*(ksi[i][j+1]-ksi[i][j-1]))/16;
 }
 
 double S(double ** u){

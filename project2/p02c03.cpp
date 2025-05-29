@@ -8,6 +8,7 @@
 const double d=4, x0=4, dx=1, w=1.9;
 const int N=31;
 
+void kopiuj(double**, double**, int);
 
 double ro(int, int);
 
@@ -31,11 +32,6 @@ int main(){
     double** u = new double*[2*N+1];
     for (int i = 0; i < 2*N+1; i++) {
         u[i] = new double[2*N+1]();
-    }
-
-    double** v = new double*[2*N+1];
-    for (int i = 0; i < 2*N+1; i++) {
-        v[i] = new double[2*N+1]();
     }
 
     double** ro_m = new double*[2*N+1];
@@ -67,12 +63,10 @@ int main(){
     for(int iter=0; iter<500; iter++){
         for(int i=1; i<2*N; i++){
             for(int j=1; j<2*N; j++){
-                v[i][j] = update_point(i,j,u, ro_m);
+                u[i][j] = update_point(i,j,u, ro_m);
             } 
         }
-        u = v;
 
-        
         wartS = S(u, ro_m);
         zapiszS(iter, wartS, &outWS);
         std::cout<< wartS << std:: endl;
@@ -85,16 +79,24 @@ int main(){
 
 
     for (int i = 0; i < 2*N+1; i++) {
-        delete[] v[i];
+        delete[] u[i];
         delete[] ro_m[i];
         delete[] d_m[i];
     }
-    delete[] v;
+    delete[] u;
     delete[] ro_m;
     delete[] d_m;
     
 
     return 0;
+}
+
+void kopiuj(double** dest, double** src, int rozmiar) {
+    for (int i = 0; i < rozmiar; i++) {
+        for (int j = 0; j < rozmiar; j++) {
+            dest[i][j] = src[i][j];
+        }
+    }
 }
 
 double ro(int x, int y){
