@@ -33,7 +33,11 @@ Source code for simulations for the subject *"Numerical Methods in Physics and T
 
 ## 🌊 Project 3 – Flow of Viscous Liquid
 
-**Planned topic:**  
-Simulation of viscous fluid flow.
+**Implemented numerical methods:**
+- Relaxation method for stream function  
+- Relaxation method for vorticity  
 
-📌 *Not started yet*
+**Features:**
+- Poiseuille flow  
+- Flow with obstacle  
+- Inviscid Flow
